@@ -11,30 +11,91 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    env:
+      EMSDK_NUM_CORES: 2
+      EMCC_CORES: 2
+      PYODIDE_JOBS: 2
+      CCACHE_DIR: /tmp/ccache
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           repository: 'pyodide/pyodide'
           ref: '0.27.4'
           submodules: 'recursive'
-      - name: Install Pyodide dependencies
+          submodules: recursive
+      - name: Cache ccache output
+        uses: actions/cache@v4
+        with:
+          path: |
+            /tmp/ccache
+          key: ${{ hashFiles('Makefile.envs') }}-${{ runner.os }}-v20211025-
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: pyodide-env
+          environment-file: environment.yml
+          channels: conda-forge
+
+      - name: Check Versions
+        shell: bash -l {0}
         run: |
-          ls -1
-          python -m pip install -r requirements.txt
-      - name: Build the Pyodide distribution
+          python --version
+          node --version
+          npm --version
+          which python
+          which node
+          which npm
+
+      - name: Install dependencies (ubuntu)
+        shell: bash -l {0}
         run: |
+          sudo apt install -y build-essential git xxd
+
+
+      - name: Install dependencies (Python)
+        shell: bash -l {0}
+        run: |
+          pip install -r requirements.txt
+
+      - name: Build emsdk
+        shell: bash -l {0}
+        run: |
+          which ccache
+
+          ccache -z
+          make -C emsdk
+          ccache -s
+
+      - name: Build Cpython
+        shell: bash -l {0}
+        run: |
+          # This is necessary to use the ccache from emsdk
+          source pyodide_env.sh
+
+          which ccache
+
+          ccache -z
+          make -C cpython
+          ccache -s
+
+      - name: build Pyodide
+        shell: bash -l {0}
+        run: |
+          # This is necessary to use the ccache from emsdk
+          source pyodide_env.sh
+          ccache -z
           make
+          ccache -s
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
+
+
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'
