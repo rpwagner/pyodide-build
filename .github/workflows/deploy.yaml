@@ -25,6 +25,10 @@ jobs:
           repository: 'pyodide/pyodide'
           ref: '0.27.4'
           submodules: 'recursive'
+
+      - uses: actions/checkout@v4
+        sparse-checkout: 'packages'
+
       - name: Cache ccache output
         uses: actions/cache@v4
         with:
@@ -91,7 +95,7 @@ jobs:
           # This is necessary to use the ccache from emsdk
           source pyodide_env.sh
           ccache -z
-          make
+          PYODIDE_PACKAGES='tag:min-scipy-stack,seaborn,globus-sdk,cryptography,PyJWT,requests,Cartopy,pyproj,urllib3' make
           ccache -s
 
       - name: check-size

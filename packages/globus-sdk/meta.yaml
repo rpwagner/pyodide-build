@@ -1,0 +1,24 @@
+package:
+  name: globus-sdk
+  version: 3.53.0
+  top-level:
+    - globus_sdk
+
+source:
+  url: https://files.pythonhosted.org/packages/85/2d/217a460102184284f90b22242ca876655503d0b88bf2bac90307721020d7/globus_sdk-3.53.0.tar.gz
+  sha256: 502cf6f2fac3d8f2ee1f0270db07307adb0b928f367dad522c3ec5ac90b5acec
+
+requirements:
+  run:
+    - requests
+    - PyJWT
+    - cryptography
+
+about:
+  home: null
+  PyPI: https://pypi.org/project/globus-sdk/
+  summary: This SDK provides a convenient Pythonic interface to Globus APIs.
+  license: null
+extra:
+  recipe-maintainers:
+    - PUT_YOUR_GITHUB_USERNAME_HERE

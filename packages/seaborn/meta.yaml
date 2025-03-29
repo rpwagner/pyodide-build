@@ -1,0 +1,25 @@
+package:
+  name: seaborn
+  version: 0.13.2
+  top-level:
+    - seaborn
+
+source:
+  url: https://files.pythonhosted.org/packages/86/59/a451d7420a77ab0b98f7affa3a1d78a313d2f7281a57afb1a34bae8ab412/seaborn-0.13.2.tar.gz
+  sha256: 93e60a40988f4d65e9f4885df477e2fdaff6b73a9ded434c1ab356dd57eefff7
+
+requirements:
+  run:
+    - numpy
+    - matplotlib
+    - scipy
+    - pandas
+
+about:
+  home: null
+  PyPI: https://pypi.org/project/seaborn
+  summary: Statistical data visualization
+  license: null
+extra:
+  recipe-maintainers:
+    - PUT_YOUR_GITHUB_USERNAME_HERE
