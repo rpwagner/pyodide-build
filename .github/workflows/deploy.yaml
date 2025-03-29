@@ -10,7 +10,14 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+  runs-on: ubuntu-latest
+    env:
+      EMSDK_NUM_CORES: 2
+      EMCC_CORES: 2
+      PYODIDE_JOBS: 2
+      CCACHE_DIR: /tmp/ccache
  
     steps:
       - uses: actions/checkout@v4
@@ -18,45 +25,77 @@ jobs:
           repository: 'pyodide/pyodide'
           ref: '0.27.4'
           submodules: 'recursive'
+      - name: Cache ccache output
+        uses: actions/cache@v4
+        with:
+          path: |
+            /tmp/ccache
+          key: ${{ hashFiles('Makefile.envs') }}-${{ runner.os }}-v20211025-
 
-      - name: Install dependencies (ubuntu)
-        shell: bash -l {0}
-        run: |
-          sudo apt install -y build-essential git xxd cmake autoconf automake libtool f2c ccache
-
-      - name: Create venv
-        shell: bash -l {0}
-        run: |
-          python -m venv pyodide-venv
-          source pyodide-venv/bin/activate
-          pip install -r requirements.txt
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: pyodide-env
+          environment-file: environment.yml
+          channels: conda-forge
 
       - name: Check Versions
         shell: bash -l {0}
         run: |
-          source pyodide-venv/bin/activate
           python --version
+          node --version
+          npm --version
           cmake --version
           which python
+          which node
+          which npm
           which cmake
+
+      - name: Install dependencies (ubuntu)
+        shell: bash -l {0}
+        run: |
+          sudo apt install -y build-essential git xxd
+      - name: Install dependencies (Python)
+        shell: bash -l {0}
+        run: |
+          pip install -r requirements.txt
 
       - name: Build emsdk
         shell: bash -l {0}
         run: |
-          source pyodide-venv/bin/activate
+          which ccache
+
+          ccache -z
           make -C emsdk
+          ccache -s
 
       - name: Build Cpython
         shell: bash -l {0}
         run: |
-          source pyodide-venv/bin/activate
-          make -C cpython
+          # This is necessary to use the ccache from emsdk
+          source pyodide_env.sh
 
-      - name: build Pyodide
+          which ccache
+
+          ccache -z
+          make -C cpython
+          ccache -s
+
+      - name: build Pyodide with packages
         shell: bash -l {0}
         run: |
-          source pyodide-venv/bin/activate
+          # This is necessary to use the ccache from emsdk
+          source pyodide_env.sh
+          ccache -z
           make
+          ccache -s
+
+      - name: check-size
+        shell: bash -l {0}
+        run: |
+          ls -lh dist/
+
+          pip install brotli
+          ./tools/check_compressed_size.py dist/pyodide.asm.* dist/python_stdlib*
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
