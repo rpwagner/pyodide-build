@@ -11,86 +11,52 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    env:
-      EMSDK_NUM_CORES: 2
-      EMCC_CORES: 2
-      PYODIDE_JOBS: 2
-      CCACHE_DIR: /tmp/ccache
-
+ 
     steps:
       - uses: actions/checkout@v4
         with:
           repository: 'pyodide/pyodide'
           ref: '0.27.4'
           submodules: 'recursive'
-      - name: Cache ccache output
-        uses: actions/cache@v4
-        with:
-          path: |
-            /tmp/ccache
-          key: ${{ hashFiles('Makefile.envs') }}-${{ runner.os }}-v20211025-
-
-      - uses: conda-incubator/setup-miniconda@v3
-        with:
-          activate-environment: pyodide-env
-          environment-file: environment.yml
-          channels: conda-forge
-
-      - name: Check Versions
-        shell: bash -l {0}
-        run: |
-          python --version
-          node --version
-          npm --version
-          cmake --version
-          which python
-          which node
-          which npm
-          which cmake
 
       - name: Install dependencies (ubuntu)
         shell: bash -l {0}
         run: |
-          sudo apt install -y build-essential git xxd
+          sudo apt install -y build-essential git xxd cmake
 
-
-      - name: Install dependencies (Python)
+      - name: Create venv
         shell: bash -l {0}
         run: |
+          python -m venv pyodide-venv
+          source pyodide-venv/bin/activate
           pip install -r requirements.txt
+
+      - name: Check Versions
+        shell: bash -l {0}
+        run: |
+          source pyodide-venv/bin/activate
+          python --version
+          cmake --version
+          which python
+          which cmake
 
       - name: Build emsdk
         shell: bash -l {0}
         run: |
-          which ccache
-          pwd
-          head /home/runner/work/pyodide-build/pyodide-build/emsdk/emsdk/ccache/git-emscripten_64bit/src/CMakeLists.txt
-          ccache -z
+          source pyodide-venv/bin/activate
           make -C emsdk
-          ccache -s
 
       - name: Build Cpython
         shell: bash -l {0}
         run: |
-          # This is necessary to use the ccache from emsdk
-          source pyodide_env.sh
-
-          which ccache
-
-          ccache -z
+          source pyodide-venv/bin/activate
           make -C cpython
-          ccache -s
 
       - name: build Pyodide
         shell: bash -l {0}
         run: |
-          # This is necessary to use the ccache from emsdk
-          source pyodide_env.sh
-          ccache -z
+          source pyodide-venv/bin/activate
           make
-          ccache -s
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
