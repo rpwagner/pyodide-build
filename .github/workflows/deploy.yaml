@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies (ubuntu)
         shell: bash -l {0}
         run: |
-          sudo apt install -y build-essential git xxd cmake
+          sudo apt install -y build-essential git xxd cmake autoconf automake libtool f2c ccache
 
       - name: Create venv
         shell: bash -l {0}
