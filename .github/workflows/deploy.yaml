@@ -47,6 +47,7 @@ jobs:
           which python
           which node
           which npm
+          which cmake
 
       - name: Install dependencies (ubuntu)
         shell: bash -l {0}
