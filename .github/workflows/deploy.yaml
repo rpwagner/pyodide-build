@@ -44,6 +44,7 @@ jobs:
           python --version
           node --version
           npm --version
+          cmake --version
           which python
           which node
           which npm
