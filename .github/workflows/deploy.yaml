@@ -30,11 +30,11 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Build the Pyodide distribution
         run: |
-          echo This will eventually build the distribution
+          make
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./
+          path: ./dist
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'
