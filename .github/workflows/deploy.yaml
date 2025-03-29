@@ -23,7 +23,8 @@ jobs:
           echo This will eventually build the distribution
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
-
+        with:
+          path: ./
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'
