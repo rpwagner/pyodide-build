@@ -27,7 +27,8 @@ jobs:
           submodules: 'recursive'
 
       - uses: actions/checkout@v4
-        sparse-checkout: 'packages'
+        sparse-checkout: |
+          packages
 
       - name: Cache ccache output
         uses: actions/cache@v4
