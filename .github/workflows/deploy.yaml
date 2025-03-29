@@ -29,6 +29,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: packages
+          path: new-packages
+
+      - name: Add new packages
+        shell: bash -l {0}
+        run: |
+          cp -r new-packages/packages/* packages/
 
       - name: Cache ccache output
         uses: actions/cache@v4
