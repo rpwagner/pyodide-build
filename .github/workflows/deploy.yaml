@@ -25,7 +25,6 @@ jobs:
           repository: 'pyodide/pyodide'
           ref: '0.27.4'
           submodules: 'recursive'
-          submodules: recursive
       - name: Cache ccache output
         uses: actions/cache@v4
         with:
