@@ -65,7 +65,8 @@ jobs:
         shell: bash -l {0}
         run: |
           which ccache
-          head CMakeLists.txt
+	  pwd
+          head /home/runner/work/pyodide-build/pyodide-build/emsdk/emsdk/ccache/git-emscripten_64bit/src/CMakeLists.txt
           ccache -z
           make -C emsdk
           ccache -s
