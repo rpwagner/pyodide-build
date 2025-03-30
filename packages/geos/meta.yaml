@@ -6,7 +6,7 @@ package:
     - shared_library
 source:
   url: https://github.com/libgeos/geos/releases/download/3.12.3/geos-3.12.3.tar.bz2
-  sha256: e8a5854a087b03a669a08920f89b72413621cc7275839b8e7c5ab7b3d01f9e50
+  sha256: 6155e5a570cc2e80a5e2617e0f5831af1ad2e2573d500538732e481357a9adcf
 
 build:
   type: shared_library
