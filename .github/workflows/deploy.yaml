@@ -72,6 +72,7 @@ jobs:
           which node
           which npm
           which cmake
+          echo PYODIDE_PACKAGES will be set to ${{ inputs.pyodide_packages }}
 
       - name: Install dependencies (ubuntu)
         shell: bash -l {0}
