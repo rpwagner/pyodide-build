@@ -1,0 +1,154 @@
+diff --git a/environment.yml b/environment.yml
+index 8cc6d7a..4bba305 100644
+--- a/environment.yml
++++ b/environment.yml
+@@ -14,6 +14,7 @@ dependencies:
+   - pyshp>=2.3
+   - pyproj>=3.3.1
+   - packaging>=21
++  - urllib3>=2.3
+   # The testing label has the proper version of freetype included
+   - conda-forge/label/testing::matplotlib-base>=3.6
+ 
+diff --git a/lib/cartopy/io/__init__.py b/lib/cartopy/io/__init__.py
+index 9e192ae..3d87e63 100644
+--- a/lib/cartopy/io/__init__.py
++++ b/lib/cartopy/io/__init__.py
+@@ -13,9 +13,10 @@ sub-packages for loading, saving and retrieving various data formats.
+ import collections
+ from pathlib import Path
+ import string
+-from urllib.request import urlopen
+ import warnings
+ 
++from urllib3 import request
++
+ from cartopy import config
+ 
+ 
+@@ -228,6 +229,7 @@ class Downloader:
+ 
+         with open(target_path, 'wb') as fh:
+             fh.write(response.read())
++        response.release_conn()
+ 
+         return target_path
+ 
+@@ -239,7 +241,7 @@ class Downloader:
+ 
+         """
+         warnings.warn(f'Downloading: {url}', DownloadWarning)
+-        return urlopen(url)
++        return request('GET', url, preload_content=False)
+ 
+     @staticmethod
+     def from_config(specification, config_dict=None):
+diff --git a/lib/cartopy/io/img_tiles.py b/lib/cartopy/io/img_tiles.py
+index a9e92af..ffa990a 100644
+--- a/lib/cartopy/io/img_tiles.py
++++ b/lib/cartopy/io/img_tiles.py
+@@ -202,7 +202,8 @@ class GoogleWTS(metaclass=ABCMeta):
+         pass
+ 
+     def get_image(self, tile):
+-        from urllib.request import HTTPError, Request, URLError, urlopen
++        from urllib3 import request
++        from urllib3.exceptions import HTTPError
+ 
+         if self.cache_path is not None:
+             filename = "_".join([str(i) for i in tile]) + ".npy"
+@@ -215,13 +216,13 @@ class GoogleWTS(metaclass=ABCMeta):
+         else:
+             url = self._image_url(tile)
+             try:
+-                request = Request(url, headers={"User-Agent": self.user_agent})
+-                fh = urlopen(request)
+-                im_data = io.BytesIO(fh.read())
+-                fh.close()
++                r = request('GET', url, headers={"User-Agent": self.user_agent},
++                            preload_content=False)
++                im_data = io.BytesIO(r.read())
++                r.release_conn()
+                 img = Image.open(im_data)
+ 
+-            except (HTTPError, URLError) as err:
++            except HTTPError as err:
+                 print(err)
+                 img = Image.fromarray(np.full((256, 256, 3), (250, 250, 250),
+                                               dtype=np.uint8))
+diff --git a/lib/cartopy/io/ogc_clients.py b/lib/cartopy/io/ogc_clients.py
+index 285f822..153a5ba 100644
+--- a/lib/cartopy/io/ogc_clients.py
++++ b/lib/cartopy/io/ogc_clients.py
+@@ -18,7 +18,6 @@ this way can be found at :ref:`sphx_glr_gallery_web_services_wmts.py`.
+ import collections
+ import io
+ import math
+-from urllib.parse import urlparse
+ import warnings
+ import weakref
+ from xml.etree import ElementTree
+@@ -26,6 +25,7 @@ from xml.etree import ElementTree
+ import numpy as np
+ from PIL import Image
+ import shapely.geometry as sgeom
++from urllib3.util import parse_url
+ 
+ 
+ try:
+@@ -701,7 +701,7 @@ class WFSGeometrySource:
+             # agroenvgeo.data.inra.fr from full address
+             # http://mapserver.gis.umn.edu/mapserver
+             # or https://agroenvgeo.data.inra.fr:443/geoserver/wfs
+-            self.url = urlparse(service).hostname
++            self.url = parse_url(service).hostname
+             # WebFeatureService of owslib
+             service = WebFeatureService(service)
+         else:
+diff --git a/lib/cartopy/io/shapereader.py b/lib/cartopy/io/shapereader.py
+index 344465b..10b112b 100644
+--- a/lib/cartopy/io/shapereader.py
++++ b/lib/cartopy/io/shapereader.py
+@@ -30,10 +30,10 @@ geometry representation of shapely:
+ import io
+ import itertools
+ from pathlib import Path
+-from urllib.error import HTTPError
+ 
+ import shapefile
+ import shapely.geometry as sgeom
++from urllib3.exceptions import HTTPError
+ 
+ from cartopy import config
+ from cartopy.io import Downloader
+diff --git a/lib/cartopy/io/srtm.py b/lib/cartopy/io/srtm.py
+index 11d8fe9..e9020b0 100644
+--- a/lib/cartopy/io/srtm.py
++++ b/lib/cartopy/io/srtm.py
+@@ -402,10 +402,11 @@ class SRTMDownloader(Downloader):
+         # dependencies of cartopy.
+         from bs4 import BeautifulSoup
+         if filename is None:
+-            from urllib.request import urlopen
++            from urllib3 import request
+             url = SRTMDownloader._SRTM_BASE_URL.format(resolution=resolution)
+-            with urlopen(url) as f:
+-                html = f.read()
++            with request('GET', url, preload_content=False) as r:
++                html = r.read()
++                r.release_conn()
+         else:
+             with open(filename) as f:
+                 html = f.read()
+diff --git a/pyproject.toml b/pyproject.toml
+index 6e16bf7..79adb74 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -51,6 +51,7 @@ dependencies = [
+     "packaging>=21",
+     "pyshp>=2.3",
+     "pyproj>=3.3.1",
++    "urllib3>=2.3"
+ ]
+ dynamic = ["version"]
+ 
