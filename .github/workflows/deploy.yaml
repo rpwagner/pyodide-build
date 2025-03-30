@@ -102,7 +102,8 @@ jobs:
           # This is necessary to use the ccache from emsdk
           source pyodide_env.sh
           ccache -z
-          PYODIDE_PACKAGES='tag:min-scipy-stack,seaborn,globus-sdk,cryptography,PyJWT,requests,Cartopy,pyproj,urllib3' make
+          # PYODIDE_PACKAGES='tag:min-scipy-stack,seaborn,globus-sdk,cryptography,PyJWT,requests,Cartopy,pyproj,urllib3' make
+          PYODIDE_PACKAGES='tag:min-scipy-stack' make
           ccache -s
 
       - name: check-size
