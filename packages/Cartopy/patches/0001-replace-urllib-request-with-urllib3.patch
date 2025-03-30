@@ -1,3 +1,18 @@
+From 4a011ba07a3b97e8284813930bbed35a175c9cea Mon Sep 17 00:00:00 2001
+From: rpwagner <rick@ucsd.edu>
+Date: Sun, 30 Mar 2025 12:06:23 -0700
+Subject: [PATCH] replace urllib.request with urllib3
+
+---
+ environment.yml               |  1 +
+ lib/cartopy/io/__init__.py    |  6 ++++--
+ lib/cartopy/io/img_tiles.py   | 13 +++++++------
+ lib/cartopy/io/ogc_clients.py |  4 ++--
+ lib/cartopy/io/shapereader.py |  2 +-
+ lib/cartopy/io/srtm.py        |  7 ++++---
+ pyproject.toml                |  1 +
+ 7 files changed, 20 insertions(+), 14 deletions(-)
+
 diff --git a/environment.yml b/environment.yml
 index 8cc6d7a..4bba305 100644
 --- a/environment.yml
@@ -152,3 +167,6 @@ index 6e16bf7..79adb74 100644
  ]
  dynamic = ["version"]
  
+-- 
+2.39.5 (Apple Git-154)
+

@@ -41,7 +41,7 @@ jobs:
       - name: Add new packages
         shell: bash -l {0}
         run: |
-          cp -r new-packages/packages/* packages/
+          cp -fr new-packages/packages/* packages/
 
       - name: Cache ccache output
         uses: actions/cache@v4
@@ -110,7 +110,7 @@ jobs:
           # This is necessary to use the ccache from emsdk
           source pyodide_env.sh
           ccache -z
-          # PYODIDE_PACKAGES='tag:min-scipy-stack,seaborn,globus-sdk,cryptography,PyJWT,requests,Cartopy,pyproj,urllib3,pyodide-http' make
+          # PYODIDE_PACKAGES='tag:min-scipy-stack,seaborn,globus-sdk,cryptography,PyJWT,requests,Cartopy,pyproj,urllib3' make
           PYODIDE_PACKAGES='${{ inputs.pyodide_packages }}' make
           ccache -s
 
