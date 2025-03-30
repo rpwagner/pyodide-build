@@ -18,7 +18,7 @@ build:
   script: |
     embuilder build sqlite3 --pic
 
-    export PROJ_VERSION=9.3.1
+    export PROJ_VERSION=9.5.1
     export PROJ_DIR=${WASM_LIBRARY_DIR}
     export PROJ_INCDIR=${WASM_LIBRARY_DIR}/include
     export PROJ_LIBDIR=${WASM_LIBRARY_DIR}/lib
