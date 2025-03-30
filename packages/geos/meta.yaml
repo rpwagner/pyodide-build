@@ -1,0 +1,32 @@
+package:
+  name: geos
+  version: 3.12.3
+  tag:
+    - library
+    - shared_library
+source:
+  url: https://github.com/libgeos/geos/releases/download/3.12.3/geos-3.12.3.tar.bz2
+  sha256: e8a5854a087b03a669a08920f89b72413621cc7275839b8e7c5ab7b3d01f9e50
+
+build:
+  type: shared_library
+  script: |
+    LDFLAGS="${SIDE_MODULE_LDFLAGS}" emcmake cmake \
+      -DDISABLE_GEOS_INLINE=ON \
+      -DBUILD_TESTING=OFF \
+      -DBUILD_BENCHMARKS=OFF \
+      -DBUILD_DOCUMENTATION=OFF \
+      -DBUILD_GEOSOP=OFF \
+      -DCMAKE_C_FLAGS="-fPIC" \
+      -DCMAKE_CXX_FLAGS="-fPIC" \
+      -DCMAKE_INSTALL_PREFIX=${WASM_LIBRARY_DIR} \
+      ./
+
+    emmake make -j ${PYODIDE_JOBS:-3}
+    emmake make install
+
+    mkdir -p dist
+    cp ${WASM_LIBRARY_DIR}/lib/libgeos* dist/
+about:
+  home: https://libgeos.org/
+  license: LGPL-2.1
