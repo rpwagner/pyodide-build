@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   workflow_dispatch:
     inputs:
-      pyodide_pacakges:
+      pyodide_packages:
         description: 'Pyodide packages to build, will set PYODIDE_PACKAGES'
         required: true
         default: 'tag:min-scipy-stack'
