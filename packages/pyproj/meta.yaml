@@ -1,11 +1,11 @@
 package:
   name: pyproj
-  version: 3.7.1
+  version: 3.6.1
   top-level:
     - pyproj
 source:
-  url: https://github.com/pyproj4/pyproj/archive/refs/tags/3.7.1.tar.gz
-  sha256: 3adcc634fe73a8bfab3f226a03980cc24862d27f4e18b77bc39a3e86ad777e85
+  url: https://files.pythonhosted.org/packages/7d/84/2b39bbf888c753ea48b40d47511548c77aa03445465c35cc4c4e9649b643/pyproj-3.6.1.tar.gz
+  sha256: 44aa7c704c2b7d8fb3d483bbf75af6cb2350d30a63b144279a09b75fead501bf
 
 requirements:
   host:
@@ -18,7 +18,7 @@ build:
   script: |
     embuilder build sqlite3 --pic
 
-    export PROJ_VERSION=9.5.1
+    export PROJ_VERSION=9.4.1
     export PROJ_DIR=${WASM_LIBRARY_DIR}
     export PROJ_INCDIR=${WASM_LIBRARY_DIR}/include
     export PROJ_LIBDIR=${WASM_LIBRARY_DIR}/lib
