@@ -26,6 +26,7 @@ requirements:
     - geos
     - matplotlib
     - scipy
+    - urllib3
 
 build:
   vendor-sharedlib: true
