@@ -26,7 +26,6 @@ requirements:
     - geos
     - matplotlib
     - scipy
-    - pyodide-http
 
 build:
   vendor-sharedlib: true
