@@ -1,0 +1,131 @@
+From 1156aafdb2e0488169f76dc00c013ed6f5a0b0ba Mon Sep 17 00:00:00 2001
+From: rpwagner <rick@ucsd.edu>
+Date: Mon, 31 Mar 2025 00:33:30 -0700
+Subject: [PATCH] use pyodide-http if present
+
+---
+ lib/cartopy/io/__init__.py        | 8 ++++++++
+ lib/cartopy/io/img_tiles.py       | 8 ++++++++
+ lib/cartopy/io/ogc_clients.py     | 8 ++++++++
+ lib/cartopy/io/shapereader.py     | 8 ++++++++
+ lib/cartopy/io/srtm.py            | 8 ++++++++
+ lib/cartopy/tests/io/test_srtm.py | 8 ++++++++
+ 6 files changed, 48 insertions(+)
+
+diff --git a/lib/cartopy/io/__init__.py b/lib/cartopy/io/__init__.py
+index 9e192ae..7130444 100644
+--- a/lib/cartopy/io/__init__.py
++++ b/lib/cartopy/io/__init__.py
+@@ -10,6 +10,14 @@ sub-packages for loading, saving and retrieving various data formats.
+ 
+ """
+ 
++try:
++    # if pyodide_http is present, we are likely in WASM environment
++    import pyodide_http
++    pyodide_http.patch_all()
++except:
++    # not in WASM
++    pass
++
+ import collections
+ from pathlib import Path
+ import string
+diff --git a/lib/cartopy/io/img_tiles.py b/lib/cartopy/io/img_tiles.py
+index a9e92af..0a01f34 100644
+--- a/lib/cartopy/io/img_tiles.py
++++ b/lib/cartopy/io/img_tiles.py
+@@ -17,6 +17,14 @@ using tiles in this way can be found at the
+ 
+ """
+ 
++try:
++    # if pyodide_http is present, we are likely in WASM environment
++    import pyodide_http
++    pyodide_http.patch_all()
++except:
++    # not in WASM
++    pass
++
+ from abc import ABCMeta, abstractmethod
+ import concurrent.futures
+ import io
+diff --git a/lib/cartopy/io/ogc_clients.py b/lib/cartopy/io/ogc_clients.py
+index 285f822..aa30f28 100644
+--- a/lib/cartopy/io/ogc_clients.py
++++ b/lib/cartopy/io/ogc_clients.py
+@@ -15,6 +15,14 @@ this way can be found at :ref:`sphx_glr_gallery_web_services_wmts.py`.
+ 
+ """
+ 
++try:
++    # if pyodide_http is present, we are likely in WASM environment
++    import pyodide_http
++    pyodide_http.patch_all()
++except:
++    # not in WASM
++    pass
++
+ import collections
+ import io
+ import math
+diff --git a/lib/cartopy/io/shapereader.py b/lib/cartopy/io/shapereader.py
+index 344465b..2ad1611 100644
+--- a/lib/cartopy/io/shapereader.py
++++ b/lib/cartopy/io/shapereader.py
+@@ -27,6 +27,14 @@ geometry representation of shapely:
+ 
+ """
+ 
++try:
++    # if pyodide_http is present, we are likely in WASM environment
++    import pyodide_http
++    pyodide_http.patch_all()
++except:
++    # not in WASM
++    pass
++
+ import io
+ import itertools
+ from pathlib import Path
+diff --git a/lib/cartopy/io/srtm.py b/lib/cartopy/io/srtm.py
+index 11d8fe9..01cdb91 100644
+--- a/lib/cartopy/io/srtm.py
++++ b/lib/cartopy/io/srtm.py
+@@ -16,6 +16,14 @@ using classes and functions defined below.
+ 
+ """
+ 
++try:
++    # if pyodide_http is present, we are likely in WASM environment
++    import pyodide_http
++    pyodide_http.patch_all()
++except:
++    # not in WASM
++    pass
++
+ import io
+ from pathlib import Path
+ import warnings
+diff --git a/lib/cartopy/tests/io/test_srtm.py b/lib/cartopy/tests/io/test_srtm.py
+index e9d8db2..af9711b 100644
+--- a/lib/cartopy/tests/io/test_srtm.py
++++ b/lib/cartopy/tests/io/test_srtm.py
+@@ -3,6 +3,14 @@
+ # This file is part of Cartopy and is released under the BSD 3-clause license.
+ # See LICENSE in the root of the repository for full licensing details.
+ 
++try:
++    # if pyodide_http is present, we are likely in WASM environment
++    import pyodide_http
++    pyodide_http.patch_all()
++except:
++    # not in WASM
++    pass
++
+ import numpy as np
+ from numpy.testing import assert_array_equal
+ import pytest
+-- 
+2.39.5 (Apple Git-154)
+
