@@ -6,7 +6,7 @@ on:
       pyodide_packages:
         description: 'Pyodide packages to build, will set PYODIDE_PACKAGES'
         required: true
-        default: 'tag:min-scipy-stack,seaborn,globus-sdk,Cartopy,pywavelets'
+        default: 'tag:min-scipy-stack,seaborn,globus-sdk,Cartopy,pywavelets,requests,pyodide-http'
         type: string
   push:
     branches:
