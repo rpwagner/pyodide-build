@@ -50,11 +50,6 @@ jobs:
             /tmp/ccache
           key: ${{ hashFiles('Makefile.envs') }}-${{ runner.os }}-v20211025-
 
-      - name: Set cmake version lt 4
-        shell: bash -l {0}
-        run: |
-          sed -i 's/- cmake/- cmake<4.0/' environment.yml 
- 
       - uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: pyodide-env
