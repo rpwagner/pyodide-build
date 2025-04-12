@@ -20,11 +20,13 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ubuntu-latest
+    
     env:
       EMSDK_NUM_CORES: 2
       EMCC_CORES: 2
       PYODIDE_JOBS: 2
       CCACHE_DIR: /tmp/ccache
+      PYODIDE_PACKAGES: ${{ inputs.pyodide_packages || 'tag:min-scipy-stack,seaborn,globus-sdk,Cartopy,pywavelets,requests,pyodide-http,urllib3' }}
  
     steps:
       - uses: actions/checkout@v4
@@ -67,7 +69,7 @@ jobs:
           which node
           which npm
           which cmake
-          echo PYODIDE_PACKAGES will be set to ${{ inputs.pyodide_packages }}
+          echo "PYODIDE_PACKAGES = ${PYODIDE_PACKAGES}"
 
       - name: Install dependencies (ubuntu)
         shell: bash -l {0}
