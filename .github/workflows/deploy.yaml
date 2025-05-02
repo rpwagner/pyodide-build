@@ -26,7 +26,7 @@ jobs:
       EMCC_CORES: 2
       PYODIDE_JOBS: 2
       CCACHE_DIR: /tmp/ccache
-      PYODIDE_PACKAGES: ${{ inputs.pyodide_packages || 'tag:min-scipy-stack,seaborn,globus-sdk,Cartopy,pywavelets,requests,pyodide-http,urllib3' }}
+      PYODIDE_PACKAGES: ${{ inputs.pyodide_packages || 'tag:min-scipy-stack,seaborn,globus-sdk,Cartopy,pywavelets,requests,pyodide-http,urllib3,geographiclib' }}
  
     steps:
       - uses: actions/checkout@v4
