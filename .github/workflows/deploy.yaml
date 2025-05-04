@@ -42,9 +42,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: |
-            index.html  
-	  sparse-checkout-cone-mode: false
+          sparse-checkout: index.html
 
       - name: Add new packages
         shell: bash -l {0}
