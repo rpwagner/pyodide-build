@@ -40,14 +40,15 @@ jobs:
           sparse-checkout: packages
           path: new-packages
 
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: index.html
-
       - name: Add new packages
         shell: bash -l {0}
         run: |
           cp -fr new-packages/packages/* packages/
+
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: index.html
+          sparse-checkout-cone-mode: false
 
       - name: Cache ccache output
         uses: actions/cache@v4
