@@ -30,16 +30,28 @@ Build Pyodide via GH Actions
   - maybe put just these docs in there
 - Configure github pages build with actions
 - update repo landing page settings to show link
+- Build process is defined in `.github/workflows/deploy.yaml`
+  - this is based on the Pyodide action
+  - currently pinned to Pyodide 0.27.5, look for the checkout step
+  - may need to update that in the future, which may break the build process
+```
+      - uses: actions/checkout@v4
+        with:
+          repository: 'pyodide/pyodide'
+          ref: '0.27.5'
+          submodules: 'recursive'
+```
 - Kick off build, check the results
 - Clone the repo
 - Venv `python -m venv venv`, `source venv/bin/activate`
-- install dependencies `pip install -r requirements.txt`
+- install tools `pip install -r requirements.txt`
+- add you packages starting from the bottom up so you can test them
 - For each dependency create a [skeleton yaml file](https://pyodide.org/en/stable/development/new-packages.html#creating-the-meta-yaml-file)
 ```
 pyodide skeleton pypi <package name>
 ```
-- update download? wheel or tarball?
-- definitely add the dependencies
+  - update download? wheel or tarball?
+  - definitely add the dependencies
 - git add, commit, push
 - watch the build process
 - can also build locally
@@ -50,6 +62,7 @@ pyodide skeleton pypi <package name>
 - need to define a way to keep the list of packages to build up-to-date
   - git commit hook?
   - '*'?
+- Consider committing these packages to the list of Pyodide packages
 
 
 ### Build a Custom JupyterLite Site
