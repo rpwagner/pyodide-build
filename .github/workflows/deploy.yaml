@@ -113,7 +113,7 @@ jobs:
           source pyodide_env.sh
           ccache -z
           make
-	  cp index.html ./dist/
+          cp index.html ./dist/
           ccache -s
 
       - name: check-size
