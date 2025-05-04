@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: index.html
-          sparse-checkout-cone-mode: false
+          path: site/
 
       - name: Cache ccache output
         uses: actions/cache@v4
@@ -114,7 +114,7 @@ jobs:
           source pyodide_env.sh
           ccache -z
           make
-          cp index.html ./dist/
+          cp site/index.html dist/
           ccache -s
 
       - name: check-size
