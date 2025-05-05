@@ -3,6 +3,7 @@ package:
   version: 2.10.1
   top-level:
   - jwt
+
 source:
   url: 
     https://files.pythonhosted.org/packages/py3/p/pyjwt/PyJWT-2.10.1-py3-none-any.whl
@@ -11,12 +12,14 @@ source:
 requirements:
   run:
     - cryptography
+    - ssl
 
 about:
-  home: null
+  home: https://github.com/jpadilla/pyjwt
   PyPI: https://pypi.org/project/PyJWT
   summary: JSON Web Token implementation in Python
   license: MIT
+
 extra:
   recipe-maintainers:
-  - PUT_YOUR_GITHUB_USERNAME_HERE
+    - rpwagner
