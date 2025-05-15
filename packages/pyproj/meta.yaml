@@ -16,6 +16,8 @@ requirements:
 
 build:
   script: |
+    echo "echoing WASM_LIBRARY_DIR"
+    echo "WASM_LIBRARY_DIR = ${WASM_LIBRARY_DIR}"
     embuilder build sqlite3 --pic
 
     export PROJ_VERSION=9.4.1
