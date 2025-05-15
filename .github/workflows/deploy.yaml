@@ -35,6 +35,11 @@ jobs:
           ref: '0.27.5'
           submodules: 'recursive'
 
+      - name: Limit autoconf version
+        shell: bash -l {0}
+        run: |
+          sed -i 's/autoconf/autoconf<2.72/' environment.yml
+
       - uses: actions/checkout@v4
         with:
           sparse-checkout: packages
