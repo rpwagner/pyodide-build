@@ -13,24 +13,18 @@ requirements:
   run:
     - certifi
     - sqlite3
+  constraint:
+    - cython < 3.1.0
 
 build:
   script: |
-    echo "echoing WASM_LIBRARY_DIR"
-    echo "WASM_LIBRARY_DIR = ${WASM_LIBRARY_DIR}"
+    embuilder build sqlite3 --pic
+
     export PROJ_VERSION=9.4.1
     export PROJ_DIR=${WASM_LIBRARY_DIR}
     export PROJ_INCDIR=${WASM_LIBRARY_DIR}/include
     export PROJ_LIBDIR=${WASM_LIBRARY_DIR}/lib
     export PROJ_WHEEL=1
-
-    echo "echoing PROJ_LIBDIR"
-    echo "PROJ_LIBDIR = ${PROJ_LIBDIR}"
-
-    echo "check exists PROJ_LIBDIR"
-    ls ${PROJ_LIBDIR}
-
-    embuilder build sqlite3 --pic
     mkdir -p pyproj/proj_dir/share
     cp -r ${WASM_LIBRARY_DIR}/share/proj pyproj/proj_dir/share
   cflags: |
